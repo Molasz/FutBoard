@@ -7,6 +7,9 @@ import customIcons from "../components/icons";
 
 
 export default createVuetify({
+  theme: {
+    defaultTheme: 'dark'
+  },
   icons: {
     sets: {
       custom: customIcons

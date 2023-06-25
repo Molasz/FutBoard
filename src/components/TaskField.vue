@@ -3,7 +3,7 @@
     <div class="d-flex flex-column align-self-center" style="max-width: 1200px">
       <!-- Buttons -->
       <div class="d-flex justify-space-between align-center">
-        <v-menu offset-y>
+        <v-menu>
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
               <v-icon size="30" icon="mdi-soccer-field" class="mr-2" />
@@ -11,26 +11,27 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item @click="taskField.field = 'white'">
+            <v-list-item @click="setTaskField('white')">
               White Board
             </v-list-item>
-            <v-list-item @click="taskField.field = 'football'">
+            <v-list-item @click="setTaskField('football')">
               FootBall Full
             </v-list-item>
-            <v-list-item @click="taskField.field = 'half_football'">
+            <v-list-item @click="setTaskField('half_football')">
               FootBall Half
             </v-list-item>
-            <v-list-item @click="taskField.field = 'futsal'">
+            <v-list-item @click="setTaskField('futsal')">
               Futsal Full
             </v-list-item>
-            <v-list-item @click="taskField.field = 'half_futsal'">
+            <v-list-item @click="setTaskField('half_futsal')">
               Futsal Half
             </v-list-item>
           </v-list>
         </v-menu>
 
         <v-btn @click="resetDialog = true" class="ml-4">
-          <v-icon icon="mdi-reload" /> Reset
+          <v-icon size="25" icon="mdi-reload" class="mr-2" />
+          Reset
         </v-btn>
       </div>
 
@@ -40,11 +41,7 @@
           class="tool-box d-flex flex-column align-center justify-space-around pa-2"
         >
           <div :class="{ 'tool-selected': tool === 'players' }" class="pa-1">
-            <Player
-              :color="iconColor"
-              :size="40"
-              @click="tool = tool !== 'players' ? 'players' : null"
-            />
+            <Player :color="iconColor" :size="40" @click="setTool('players')" />
           </div>
           <div
             v-for="[type, icon] in iconsEntries"
@@ -57,11 +54,11 @@
               :style="{ fill: 'black' }"
               size="30"
               color="black"
-              @click="tool = tool !== type ? type : null"
+              @click="setTool(type)"
             />
           </div>
           <div
-            @click="tool = tool !== 'lines' ? 'lines' : null"
+            @click="setTool('lines')"
             :class="{ 'tool-selected': tool === 'lines' }"
             class="pa-2"
           >
@@ -76,7 +73,7 @@
             </svg>
           </div>
           <div
-            @click="tool = tool !== 'dashed' ? 'dashed' : null"
+            @click="setTool('dashed')"
             :class="{ 'tool-selected': tool === 'dashed' }"
             class="pa-2"
           >
@@ -266,7 +263,6 @@
 
           <v-btn
             icon="mdi-rotate-left"
-            rounded="xl"
             color="yellow"
             class="mb-8"
             v-show="
@@ -279,7 +275,6 @@
 
           <v-btn
             icon="mdi-plus"
-            rounded="xl"
             color="blue"
             class="mb-8"
             v-show="
@@ -292,7 +287,6 @@
 
           <v-btn
             icon="mdi-minus"
-            rounded="xl"
             color="blue"
             class="mb-8"
             v-show="
@@ -305,7 +299,6 @@
 
           <v-btn
             icon="mdi-format-title"
-            rounded="xl"
             color="purple"
             class="mb-8"
             v-show="selected && selected.type === 'texts'"
@@ -314,7 +307,6 @@
 
           <v-btn
             icon="mdi-delete"
-            rounded="xl"
             color="red"
             class="mb-8"
             v-show="selected"
@@ -334,7 +326,7 @@
     <v-dialog v-model="resetDialog" max-width="500" persistent>
       <v-card class="pa-4 d-flex flex-column">
         <div class="d-flex justify-center mb-4">
-          <h2> Are you sure to delete all data? </h2>
+          <h2>Are you sure to delete all data?</h2>
         </div>
         <div class="d-flex justify-space-around">
           <v-btn dark @click="resetDialog = false" color="warning">Cancel</v-btn
@@ -444,6 +436,12 @@ export default {
     },
   },
   methods: {
+    setTaskField(field) {
+      this.taskField.field = field;
+    },
+    setTool(tool) {
+      this.tool = this.tool !== tool ? tool : null;
+    },
     onSelect(item, type, index, isIcon) {
       if (this.moving || this.rotate) return;
       this.selected = { item, type, index, isIcon };
