@@ -1,11 +1,12 @@
 <template>
   <v-menu offset-y top>
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" fab :color="selectedColor" class="mb-8">
-        <v-icon :color="selectedColor === 'black' ? 'white' : 'black'">
-          {{ icon || "mdi-format-color-fill" }}
-        </v-icon>
-      </v-btn>
+      <v-btn
+        v-bind="props"
+        :color="selectedColor"
+        :icon="icon || 'mdi-format-color-fill'"
+        class="mb-8"
+      />
     </template>
 
     <v-card>
@@ -20,7 +21,7 @@
   </v-menu>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "ColorSelector",
   props: { selectedColor: String, icon: String },

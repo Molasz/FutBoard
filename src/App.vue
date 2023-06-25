@@ -9,3 +9,8 @@
 <script setup lang="ts">
   import TaskField from './components/TaskField.vue'
 </script>
+
+<style lang="sass">
+body
+  margin: 32px
+</style>

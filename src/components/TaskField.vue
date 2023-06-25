@@ -1,37 +1,36 @@
 <template>
   <section class="d-flex flex-column">
-    Title
     <div class="d-flex flex-column align-self-center" style="max-width: 1200px">
       <!-- Buttons -->
       <div class="d-flex justify-space-between align-center">
         <v-menu offset-y>
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
-              <v-icon size="30" class="mr-2">mdi-soccer-field</v-icon>
+              <v-icon size="30" icon="mdi-soccer-field" class="mr-2" />
               Select Field
             </v-btn>
           </template>
           <v-list>
             <v-list-item @click="taskField.field = 'white'">
-              En blanc
+              White Board
             </v-list-item>
             <v-list-item @click="taskField.field = 'football'">
-              Futbol camp sencer
+              FootBall Full
             </v-list-item>
             <v-list-item @click="taskField.field = 'half_football'">
-              Futbol mig camp
+              FootBall Half
             </v-list-item>
             <v-list-item @click="taskField.field = 'futsal'">
-              Futbol sala camp sencer
+              Futsal Full
             </v-list-item>
             <v-list-item @click="taskField.field = 'half_futsal'">
-              Futbol sala mig camp
+              Futsal Half
             </v-list-item>
           </v-list>
         </v-menu>
 
-        <v-btn @click="() => (resetDialog = true)" class="ml-4">
-          <v-icon>mdi-reload</v-icon> Reset
+        <v-btn @click="resetDialog = true" class="ml-4">
+          <v-icon icon="mdi-reload" /> Reset
         </v-btn>
       </div>
 
@@ -54,16 +53,15 @@
             :class="{ 'tool-selected': tool === type }"
           >
             <v-icon
-              style="fill: black"
+              :icon="icon"
+              :style="{ fill: 'black' }"
               size="30"
               color="black"
-              @click="() => (tool = tool !== type ? type : null)"
-            >
-              {{ icon }}
-            </v-icon>
+              @click="tool = tool !== type ? type : null"
+            />
           </div>
           <div
-            @click="() => (tool = tool !== 'lines' ? 'lines' : null)"
+            @click="tool = tool !== 'lines' ? 'lines' : null"
             :class="{ 'tool-selected': tool === 'lines' }"
             class="pa-2"
           >
@@ -78,7 +76,7 @@
             </svg>
           </div>
           <div
-            @click="() => (tool = tool !== 'dashed' ? 'dashed' : null)"
+            @click="tool = tool !== 'dashed' ? 'dashed' : null"
             :class="{ 'tool-selected': tool === 'dashed' }"
             class="pa-2"
           >
@@ -137,9 +135,11 @@
               :style="iconsStyle[type][index]"
               @click.stop="onSelect(icon, type, index, true)"
             >
-              <v-icon :color="icon.color || 'black'" :size="icon.size || 40">
-                {{ icons[type] }}
-              </v-icon>
+              <v-icon
+                :color="icon.color || 'black'"
+                :size="icon.size || 40"
+                :icon="icons[type]"
+              />
             </div>
           </div>
 
@@ -172,7 +172,7 @@
           </div>
 
           <div
-            class="line pa-2"
+            class="line drawing-top pa-2"
             v-if="tempLine"
             :style="{
               left: `${tempLine.x}%`,
@@ -214,7 +214,7 @@
           </div>
 
           <div
-            class="square pa-2"
+            class="square drawing-top pa-2"
             v-if="tempSquare"
             :style="{
               ...tempSquare,
@@ -265,6 +265,7 @@
           </v-btn>
 
           <v-btn
+            icon="mdi-rotate-left"
             rounded="xl"
             color="yellow"
             class="mb-8"
@@ -274,11 +275,10 @@
               selected.type !== 'squares'
             "
             @click="prepareRotate"
-          >
-            <v-icon color="black"> mdi-rotate-left </v-icon>
-          </v-btn>
+          />
 
           <v-btn
+            icon="mdi-plus"
             rounded="xl"
             color="blue"
             class="mb-8"
@@ -288,11 +288,10 @@
               selected.type !== 'squares'
             "
             @click="updateSize(3)"
-          >
-            <v-icon color="black"> mdi-plus </v-icon>
-          </v-btn>
+          />
 
           <v-btn
+            icon="mdi-minus"
             rounded="xl"
             color="blue"
             class="mb-8"
@@ -302,29 +301,25 @@
               selected.type !== 'squares'
             "
             @click="updateSize(-3)"
-          >
-            <v-icon color="black"> mdi-minus </v-icon>
-          </v-btn>
+          />
 
           <v-btn
+            icon="mdi-format-title"
             rounded="xl"
             color="purple"
             class="mb-8"
             v-show="selected && selected.type === 'texts'"
             @click="updateText"
-          >
-            <v-icon color="black"> mdi-format-title </v-icon>
-          </v-btn>
+          />
 
           <v-btn
+            icon="mdi-delete"
             rounded="xl"
-            color="error"
+            color="red"
             class="mb-8"
             v-show="selected"
             @click="onDeleteSelected"
-          >
-            <v-icon color="black"> mdi-delete </v-icon>
-          </v-btn>
+          />
         </div>
       </div>
     </div>
@@ -335,10 +330,24 @@
         <v-btn dark @click="onWrite">Write</v-btn>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="resetDialog" max-width="500" persistent>
+      <v-card class="pa-4 d-flex flex-column">
+        <div class="d-flex justify-center mb-4">
+          <h2> Are you sure to delete all data? </h2>
+        </div>
+        <div class="d-flex justify-space-around">
+          <v-btn dark @click="resetDialog = false" color="warning">Cancel</v-btn
+          ><v-btn dark @click="resetData" color="red">Delete</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
   </section>
 </template>
 
 <script>
+import interact from "interactjs";
+
 import Player from "./Player.vue";
 import ColorSelector from "./ColorSelector.vue";
 
@@ -351,11 +360,11 @@ const fieldBackground = { football, futsal, half_football, half_futsal };
 
 const icons = {
   balls: "mdi-soccer",
-  //tinyCones: "$tinyCone",
-  //cones: "$cone",
-  //goals: "$goal",
-  //picks: "$pitch",
-  //fences: "$fence",
+  cones: "custom:cone",
+  tinyCones: "custom:tinyCone",
+  goals: "custom:goal",
+  picks: "custom:pitch",
+  fences: "custom:fence",
   circles: "mdi-circle-outline",
   squares: "mdi-square-outline",
   texts: "mdi-text-recognition",
@@ -364,10 +373,6 @@ const icons = {
 export default {
   name: "TaskField",
   components: { Player, ColorSelector },
-  props: {
-    fieldData: Object,
-    reset: Boolean,
-  },
   data: () => ({
     taskField: {
       field: "white",
@@ -407,15 +412,6 @@ export default {
     firstDraw: false,
   }),
   watch: {
-    reset() {
-      this.resetField();
-    },
-    taskField: {
-      deep: true,
-      handler() {
-        this.$emit("update", this.taskField);
-      },
-    },
     tool() {
       if (this.tool) {
         this.selected = null;
@@ -656,12 +652,10 @@ export default {
       this.moving = { x: 0, y: 0 };
       this.rotate = null;
     },
-    onDragMove({ dx, dy, stopImmediatePropagation }) {
-      stopImmediatePropagation();
+    onDragMove({ dx, dy }) {
       this.moving = { x: this.moving.x + dx, y: this.moving.y + dy };
     },
-    onDragEnd({ stopImmediatePropagation }) {
-      stopImmediatePropagation();
+    onDragEnd() {
       const { x, y } = this.moving;
 
       const distanceX = (x * 100) / 864;
@@ -678,8 +672,7 @@ export default {
       this.rotate = 0;
       this.moving = null;
     },
-    onRotateMove({ clientX, clientY, stopImmediatePropagation }) {
-      stopImmediatePropagation();
+    onRotateMove({ clientX, clientY }) {
       const rect = this.$refs.field.getBoundingClientRect();
 
       const pxPlayerX = (this.selected.item.x * 864) / 100;
@@ -692,10 +685,9 @@ export default {
 
       this.rotate = angle + 90;
     },
-    onRotateEnd({ stopImmediatePropagation }) {
-      stopImmediatePropagation();
+    onRotateEnd() {
       const selectedItem = this.getSelectedItem();
-      this.$set(selectedItem, "angle", this.rotate);
+      selectedItem.angle = this.rotate;
       this.rotate = null;
     },
     resetData() {
@@ -728,7 +720,8 @@ export default {
       const defaultItem = this.selected.type === "texts" ? 18 : 40;
       const size = (item.size || defaultItem) + number;
 
-      this.$set(this.getSelectedItem(), "size", size);
+      const selected = this.getSelectedItem();
+      selected.size = size;
     },
     updateText() {
       this.textDialog = true;
@@ -736,12 +729,17 @@ export default {
     },
     onUpdateColor(color) {
       this.iconColor = color;
-      if (this.selected) this.$set(this.getSelectedItem(), "color", color);
+      if (this.selected) {
+        const selected = this.getSelectedItem();
+        selected.color = color;
+      }
     },
     onUpdateBorderColor(color) {
       this.borderColor = color;
-      if (this.selected)
-        this.$set(this.getSelectedItem(), "borderColor", color);
+      if (this.selected) {
+        const selected = this.getSelectedItem();
+        selected.borderColor = color;
+      }
     },
     getDefaultStyles(item, type, index) {
       let angle = item.angle || 0;
@@ -899,7 +897,6 @@ export default {
     },
   },
   mounted() {
-    /*
     interact(".icon-move").draggable({
       inertia: true,
       modifiers: [
@@ -928,7 +925,6 @@ export default {
         end: this.onRotateEnd,
       },
     });
-    */
   },
 };
 </script>
@@ -976,6 +972,9 @@ export default {
 .icon-rotate
   background-color: yellow !important
   z-index: 11 !important
+
+.drawing-top
+  z-index: 12 !important
 
 .icon-selected
   background-color: lightblue
