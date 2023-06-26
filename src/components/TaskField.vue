@@ -169,7 +169,7 @@
           </div>
 
           <div
-            class="line drawing-top pa-2"
+            class="line pa-2"
             v-if="tempLine"
             :style="{
               left: `${tempLine.x}%`,
@@ -211,7 +211,7 @@
           </div>
 
           <div
-            class="square drawing-top pa-2"
+            class="square pa-2"
             v-if="tempSquare"
             :style="{
               ...tempSquare,
@@ -365,6 +365,9 @@ const icons = {
 export default {
   name: "TaskField",
   components: { Player, ColorSelector },
+  props: {
+    fieldData: Object,
+  },
   data: () => ({
     taskField: {
       field: "white",
@@ -415,7 +418,9 @@ export default {
         this.rotate = null;
       }
     },
-    fieldData() {
+  },
+  methods: {
+    updateFieldData() {
       if (this.fieldData && !this.firstDraw) {
         const taskField = { ...this.taskField, ...this.fieldData };
 
@@ -434,8 +439,6 @@ export default {
         this.firstDraw = true;
       }
     },
-  },
-  methods: {
     setTaskField(field) {
       this.taskField.field = field;
     },
@@ -895,6 +898,8 @@ export default {
     },
   },
   mounted() {
+    if(this.fieldData) this.updateFieldData();
+
     interact(".icon-move").draggable({
       inertia: true,
       modifiers: [
@@ -970,9 +975,6 @@ export default {
 .icon-rotate
   background-color: yellow !important
   z-index: 11 !important
-
-.drawing-top
-  z-index: 12 !important
 
 .icon-selected
   background-color: lightblue
