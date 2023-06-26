@@ -1,5 +1,5 @@
 {
-  "name": "footBoard",
+  "name": "fut-board",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",

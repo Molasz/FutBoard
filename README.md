@@ -1,44 +1,18 @@
-# default
+# FutBoard
+JavaScript application to simulate football training whiteboard, [Vue](https://vuejs.org/) as framework, [Vuetify](https://vuetifyjs.com/) for styling and [InteractJS](https://interactjs.io/) for manage some of dragging functionalities. 
 
-## Project setup
+More npm packages are used for developing see `package.json` for more information.
+## Links
 
-```
-# yarn
-yarn
+- [GitHub](https://github.com/Molasz/FutBoard)
+- [Live Demo]()
 
-# npm
+## Setup
+
+``` bash
+# Install dependencies
 npm install
 
-# pnpm
-pnpm install
-```
-
-### Compiles and hot-reloads for development
-
-```
-# yarn
-yarn dev
-
-# npm
+# Run the local server
 npm run dev
-
-# pnpm
-pnpm dev
 ```
-
-### Compiles and minifies for production
-
-```
-# yarn
-yarn build
-
-# npm
-npm run build
-
-# pnpm
-pnpm build
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://vitejs.dev/config/).

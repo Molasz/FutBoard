@@ -8,13 +8,6 @@ export default {
       size: 30,
       text: "Start",
     },
-    {
-      x: 46.412038803100586,
-      y: 73.75634266779973,
-      color: "black",
-      size: 18,
-      text: "shoot",
-    },
   ],
   players: [
     {
